@@ -5,28 +5,23 @@ const minusBtn = document.getElementById("minus");
 const number = document.querySelector("span");
 
 
-const countModifier = (count = 0) => {
-	return count;
+const countModifier = (count = 0, action) => {
+	if(action.type === "ADD") {
+		return count += 1;
+	} else if(action.type === "MINUS") {
+		return count -= 1;
+	} else {
+		return count;
+	}
 }
 
 const countStore = createStore(countModifier);
 
-let count = 0;
-number.innerText = count;
-
-const updateNumber = () => {
-	number.innerText = count;
+const onChange = () => {
+	number.innerText = countStore.getState();
 }
 
-const handleAdd = () => {
-	count++;
-	updateNumber();
-}
+countStore.subscribe(onChange);
 
-const handleMinus = () => {
-	count--;
-	updateNumber();
-}
-
-plusBtn.addEventListener("click", handleAdd);
-minusBtn.addEventListener("click", handleMinus);
+plusBtn.addEventListener("click", () => countStore.dispatch({ type: "ADD" }));
+minusBtn.addEventListener("click", () => countStore.dispatch({ type: "MINUS" }));
